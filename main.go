@@ -44,13 +44,13 @@ func printHelp() {
 	fmt.Println("      Set the following additional environment variables:")
 	fmt.Println("           NONFUNGIBLE_POSITION_MANAGER_CONTRACT_ADDRESS")
 
-	fmt.Println("(optional) quantumswap-deploy exactInputSingle TOKEN_IN_ADDRESS TOKEN_OUT_ADDRESS FEE AMOUNT_IN AMOUNT_OUT_MIN")
+	fmt.Println("(optional) quantumswap-deploy exactinputsingle TOKEN_IN_ADDRESS TOKEN_OUT_ADDRESS FEE AMOUNT_IN AMOUNT_OUT_MIN")
 	fmt.Println("      Set the following environment variables:")
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT,FROM_ADDRESS")
 	fmt.Println("      Set the following additional environment variables:")
 	fmt.Println("           SWAP_ROUTER_CONTRACT_ADDRESS")
 
-	fmt.Println("(optional) quantumswap-deploy exactOutputSingle TOKEN_IN_ADDRESS TOKEN_OUT_ADDRESS FEE AMOUNT_OUT AMOUNT_IN_MAX")
+	fmt.Println("(optional) quantumswap-deploy exactoutputsingle TOKEN_IN_ADDRESS TOKEN_OUT_ADDRESS FEE AMOUNT_OUT AMOUNT_IN_MAX")
 	fmt.Println("      Set the following environment variables:")
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT,FROM_ADDRESS")
 	fmt.Println("      Set the following additional environment variables:")
@@ -87,9 +87,9 @@ func main() {
 		Approve()
 	} else if os.Args[1] == "addliquidity" {
 		AddLiquidity()
-	} else if os.Args[1] == "exactInputSingle" {
+	} else if os.Args[1] == "exactinputsingle" {
 		ExactInputSingle()
-	} else if os.Args[1] == "exactOutputSingle" {
+	} else if os.Args[1] == "exactoutputsingle" {
 		ExactOutputSingle()
 	} else {
 		printHelp()
