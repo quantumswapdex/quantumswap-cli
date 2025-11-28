@@ -10,12 +10,15 @@ Set following environment variables:
 ## How to Swap Tokens 
 Additionally, the `FEE` value used when creating the liquidity pool should be identified.
 
-
 ### Option A) Swapping with option of constant input tokens and minimum output tokens needed
 ```quantumswap-cli createpool TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE```
 
+`FEE` : Use values 500 for 0.05%, 3000 for 0.3% or 10000 for 1% fee tier
+
 ### Option B) Swapping with option of constant output tokens and maximum input spend
 ```quantumswap-cli getpool TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE```
+
+`FEE` : Use values 500 for 0.05%, 3000 for 0.3% or 10000 for 1% fee tier
 
 ## How to create Tokens, Check Balance, transfer etc.?
 
@@ -45,12 +48,12 @@ Set the following environment variables:
 
 ```quantumswap-cli createpool TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE```
 
-`FEE` : a fee tier (0.05%, 0.3%, or 1%)
+`FEE` : Use values 500 for 0.05%, 3000 for 0.3% or 10000 for 1% fee tier
 
 ### 2) Get the Pool Address
 ```quantumswap-cli getpool TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE```
 
-`FEE` : a fee tier (0.05%, 0.3%, or 1%)
+`FEE` : Use values 500 for 0.05%, 3000 for 0.3% or 10000 for 1% fee tier
 
 ### 2) Initialize the Pool
 
@@ -73,6 +76,6 @@ Set the following environment variables:
 ### 5) Add Liquidity
 ```quantumswap-deploy addliquidity TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE TICK_LOWER TICK_UPPER AMOUNT_A AMOUNT_B AMOUNT_A_MIN AMOUNT_B_MIN```
 
-`FEE` : a fee tier (0.05%, 0.3%, or 1%)
+`FEE` : Use values 500 for 0.05%, 3000 for 0.3% or 10000 for 1% fee tier
 
 

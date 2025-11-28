@@ -19,12 +19,14 @@ func printHelp() {
 	fmt.Println("--------")
 
 	fmt.Println("(optional) quantumswap-cli createpool TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE")
+	fmt.Println(" FEE should be 500 or 3000 or 10000 (For 0.3, 0.05%, 0.3%, or 1%)")
 	fmt.Println("      Set the following environment variables:")
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT,FROM_ADDRESS")
 	fmt.Println("      Set the following additional environment variables:")
 	fmt.Println("           V3_CORE_FACTORY_CONTRACT_ADDRESS")
 
 	fmt.Println("(optional) quantumswap-cli getpool TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE")
+	fmt.Println(" FEE should be 500 or 3000 or 10000 (For 0.3, 0.05%, 0.3%, or 1%)")
 	fmt.Println("      Set the following environment variables:")
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT")
 	fmt.Println("      Set the following additional environment variables:")
@@ -39,18 +41,21 @@ func printHelp() {
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT,FROM_ADDRESS")
 
 	fmt.Println("(optional) quantumswap-deploy addliquidity TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE TICK_LOWER TICK_UPPER AMOUNT_A AMOUNT_B AMOUNT_A_MIN AMOUNT_B_MIN")
+	fmt.Println(" FEE should be 500 or 3000 or 10000 (For 0.3, 0.05%, 0.3%, or 1%)")
 	fmt.Println("      Set the following environment variables:")
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT,FROM_ADDRESS")
 	fmt.Println("      Set the following additional environment variables:")
 	fmt.Println("           NONFUNGIBLE_POSITION_MANAGER_CONTRACT_ADDRESS")
 
 	fmt.Println("(optional) quantumswap-deploy exactinputsingle TOKEN_IN_ADDRESS TOKEN_OUT_ADDRESS FEE AMOUNT_IN AMOUNT_OUT_MIN")
+	fmt.Println(" FEE should be 500 or 3000 or 10000 (For 0.3, 0.05%, 0.3%, or 1%)")
 	fmt.Println("      Set the following environment variables:")
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT,FROM_ADDRESS")
 	fmt.Println("      Set the following additional environment variables:")
 	fmt.Println("           SWAP_ROUTER_CONTRACT_ADDRESS")
 
 	fmt.Println("(optional) quantumswap-deploy exactoutputsingle TOKEN_IN_ADDRESS TOKEN_OUT_ADDRESS FEE AMOUNT_OUT AMOUNT_IN_MAX")
+	fmt.Println(" FEE should be 500 or 3000 or 10000 (For 0.3, 0.05%, 0.3%, or 1%)")
 	fmt.Println("      Set the following environment variables:")
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT,FROM_ADDRESS")
 	fmt.Println("      Set the following additional environment variables:")
@@ -122,6 +127,10 @@ func CreatePool() {
 		fmt.Println("Error parsing FEE", err)
 		return
 	}
+	if fee != 500 && fee != 3000 && fee != 10000 {
+		fmt.Println("Accepted values for FEE are 500, 3000, 10000")
+		return
+	}
 
 	v3coreFactoryContractAddr := os.Getenv("V3_CORE_FACTORY_CONTRACT_ADDRESS")
 	if common.IsHexAddress(v3coreFactoryContractAddr) == false {
@@ -178,6 +187,10 @@ func GetPool() {
 	fee, err := strconv.ParseUint(feeVal, 10, 64)
 	if err != nil {
 		fmt.Println("Error parsing FEE", err)
+		return
+	}
+	if fee != 500 && fee != 3000 && fee != 10000 {
+		fmt.Println("Accepted values for FEE are 500, 3000, 10000")
 		return
 	}
 
@@ -338,6 +351,10 @@ func AddLiquidity() {
 		fmt.Println("Error parsing FEE", err)
 		return
 	}
+	if fee != 500 && fee != 3000 && fee != 10000 {
+		fmt.Println("Accepted values for FEE are 500, 3000, 10000")
+		return
+	}
 
 	tickLowerVal := os.Args[5]
 	tickLower, err := strconv.ParseUint(tickLowerVal, 10, 64)
@@ -438,6 +455,10 @@ func ExactInputSingle() {
 		fmt.Println("Error parsing FEE", err)
 		return
 	}
+	if fee != 500 && fee != 3000 && fee != 10000 {
+		fmt.Println("Accepted values for FEE are 500, 3000, 10000")
+		return
+	}
 
 	amountInVal := os.Args[5]
 	amountIn, err := strconv.ParseUint(amountInVal, 10, 64)
@@ -508,6 +529,10 @@ func ExactOutputSingle() {
 	fee, err := strconv.ParseUint(feeVal, 10, 64)
 	if err != nil {
 		fmt.Println("Error parsing FEE", err)
+		return
+	}
+	if fee != 500 && fee != 3000 && fee != 10000 {
+		fmt.Println("Accepted values for FEE are 500, 3000, 10000")
 		return
 	}
 
