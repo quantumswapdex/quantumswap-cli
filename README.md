@@ -66,15 +66,19 @@ Set the following environment variables:
 
 `TOKEN_ADDRESS`: Pass the `TOKEN_A_ADDRESS` 
 `AMOUNT` You may give maximum or specific amount
+`APPROVAL_ADDRESS`: Pass the `NONFUNGIBLE_POSITION_MANAGER_CONTRACT_ADDRESS`
 
 ### 4) Approve TokenB
 ```quantumswap-cli approve TOKEN_ADDRESS APPROVAL_ADDRESS AMOUNT```
 
 `TOKEN_ADDRESS`: Pass the `TOKEN_A_ADDRESS`
 `AMOUNT` You may give maximum or specific amount
+`APPROVAL_ADDRESS`: Pass the `NONFUNGIBLE_POSITION_MANAGER_CONTRACT_ADDRESS`
 
 ### 5) Add Liquidity
 ```quantumswap-deploy addliquidity TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE TICK_LOWER TICK_UPPER AMOUNT_A AMOUNT_B AMOUNT_A_MIN AMOUNT_B_MIN```
+
+Use the helper functions `TickToPrice` and `PriceToTick` for calculating the tick values for price as desired.
 
 `FEE` : Use values 500 for 0.05%, 3000 for 0.3% or 10000 for 1% fee tier
 

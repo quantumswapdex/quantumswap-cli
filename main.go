@@ -41,6 +41,7 @@ func printHelp() {
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT,FROM_ADDRESS")
 
 	fmt.Println("(optional) quantumswap-deploy addliquidity TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE TICK_LOWER TICK_UPPER AMOUNT_A AMOUNT_B AMOUNT_A_MIN AMOUNT_B_MIN")
+	fmt.Println(" !!!LIMITATION!!! Amount will be converted to WETH based on 18 decimals internally. Other decimals not supported.")
 	fmt.Println(" FEE should be 500 or 3000 or 10000 (For 0.3, 0.05%, 0.3%, or 1%)")
 	fmt.Println("      Set the following environment variables:")
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT,FROM_ADDRESS")
@@ -60,6 +61,10 @@ func printHelp() {
 	fmt.Println("           CHAIN_ID, DP_RAW_URL, DP_KEY_FILE_DIR or DP_KEY_FILE,GAS_LIMIT,FROM_ADDRESS")
 	fmt.Println("      Set the following additional environment variables:")
 	fmt.Println("           SWAP_ROUTER_CONTRACT_ADDRESS")
+
+	fmt.Println("(optional) quantumswap-deploy ticktoprice TICK")
+
+	fmt.Println("(optional) quantumswap-deploy pricetotick PRICE")
 }
 
 func main() {
@@ -96,6 +101,10 @@ func main() {
 		ExactInputSingle()
 	} else if os.Args[1] == "exactoutputsingle" {
 		ExactOutputSingle()
+	} else if os.Args[1] == "ticktoprice" {
+		TickToPrice()
+	} else if os.Args[1] == "pricetotick" {
+		PriceToTick()
 	} else {
 		printHelp()
 	}
@@ -257,7 +266,7 @@ func InitializePool() {
 	}
 	fromAddress = common.HexToAddress(fromAddr)
 
-	ethConfirm, err := prompt.Stdin.PromptConfirm(fmt.Sprintf("Do you want to CreatePool from %s?", fromAddress))
+	ethConfirm, err := prompt.Stdin.PromptConfirm(fmt.Sprintf("Do you want to InitializePool from %s?", fromAddress))
 	if err != nil {
 		fmt.Println("error", err)
 		return
@@ -357,14 +366,14 @@ func AddLiquidity() {
 	}
 
 	tickLowerVal := os.Args[5]
-	tickLower, err := strconv.ParseUint(tickLowerVal, 10, 64)
+	tickLower, err := strconv.ParseInt(tickLowerVal, 10, 64)
 	if err != nil {
 		fmt.Println("Error parsing TICK_LOWER", err)
 		return
 	}
 
 	tickUpperVal := os.Args[6]
-	tickUpper, err := strconv.ParseUint(tickUpperVal, 10, 64)
+	tickUpper, err := strconv.ParseInt(tickUpperVal, 10, 64)
 	if err != nil {
 		fmt.Println("Error parsing TICK_UPPER", err)
 		return
@@ -412,7 +421,7 @@ func AddLiquidity() {
 	}
 	fromAddress = common.HexToAddress(fromAddr)
 
-	ethConfirm, err := prompt.Stdin.PromptConfirm(fmt.Sprintf("Do you want to CreatePool from %s?", fromAddress))
+	ethConfirm, err := prompt.Stdin.PromptConfirm(fmt.Sprintf("Do you want to AddLiquidity from %s?", fromAddress))
 	if err != nil {
 		fmt.Println("error", err)
 		return
@@ -422,7 +431,7 @@ func AddLiquidity() {
 		return
 	}
 
-	_, err = addLiquidity(tokenAaddress, tokenBaddress, int64(fee), int64(tickLower), int64(tickUpper), int64(amountA), int64(amountB), int64(amountAmin), int64(amountBmin))
+	_, err = addLiquidity(tokenAaddress, tokenBaddress, int64(fee), tickLower, tickUpper, int64(amountA), int64(amountB), int64(amountAmin), int64(amountBmin))
 	if err != nil {
 		fmt.Println("addLiquidity error", err)
 		return
@@ -579,4 +588,38 @@ func ExactOutputSingle() {
 		fmt.Println("swapExactSingle error", err)
 		return
 	}
+}
+
+func PriceToTick() {
+	if len(os.Args) < 3 {
+		printHelp()
+		return
+	}
+
+	priceVal := os.Args[2]
+	price, err := ParseBigFloat(priceVal)
+	if err != nil {
+		fmt.Println("Error parsing PRICE", err)
+		return
+	}
+
+	tick := getTickFromPrice(price)
+	fmt.Println("Price", price, "Tick", tick)
+}
+
+func TickToPrice() {
+	if len(os.Args) < 3 {
+		printHelp()
+		return
+	}
+
+	tickVal := os.Args[2]
+	tick, err := strconv.ParseInt(tickVal, 10, 64)
+	if err != nil {
+		fmt.Println("Error parsing TICK", err)
+		return
+	}
+
+	price := getPriceFromTick(int32(tick))
+	fmt.Println("Tick", tick, "Price", price)
 }

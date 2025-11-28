@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"math/big"
 	"os"
 	"path/filepath"
@@ -26,6 +27,7 @@ import (
 	"github.com/quantumcoinproject/quantum-coin-go/crypto/cryptobase"
 	"github.com/quantumcoinproject/quantum-coin-go/crypto/signaturealgorithm"
 	"github.com/quantumcoinproject/quantum-coin-go/ethclient"
+	"github.com/quantumcoinproject/quantum-coin-go/params"
 	"github.com/quantumcoinproject/quantum-coin-go/token"
 )
 
@@ -193,6 +195,78 @@ func GetKey(address string) (*signaturealgorithm.PrivateKey, error) {
 	}
 
 	return key.PrivateKey, nil
+}
+
+// getPriceFromTick converts a tick to a price using the formula: 1.0001^tick
+// tick is a signed 24-bit integer (int24 in Solidity, int32 in Go)
+// Uses big.Float for high precision calculations
+func getPriceFromTick(tick int32) *big.Float {
+	// Base: 1.0001
+	base := big.NewFloat(1.0001)
+
+	// If tick is 0, return 1.0
+	if tick == 0 {
+		return big.NewFloat(1.0)
+	}
+
+	// Use efficient exponentiation by squaring
+	result := big.NewFloat(1.0)
+	absTick := int32(tick)
+	if tick < 0 {
+		absTick = -tick
+	}
+
+	// Binary exponentiation (exponentiation by squaring)
+	currentPower := new(big.Float).Set(base)
+	for absTick > 0 {
+		if absTick&1 == 1 {
+			result.Mul(result, currentPower)
+		}
+		currentPower.Mul(currentPower, currentPower)
+		absTick >>= 1
+	}
+
+	// If tick was negative, take the reciprocal
+	if tick < 0 {
+		result.Quo(big.NewFloat(1.0), result)
+	}
+
+	return result
+}
+
+// getPriceFromTickFloat64 is a simpler version using float64 (less precise but faster)
+func getPriceFromTickFloat64(tick int32) float64 {
+	return math.Pow(1.0001, float64(tick))
+}
+
+// getTickFromPrice converts a price to a tick using the formula: log(price) / log(1.0001)
+// price is a uint256 in Solidity, represented as *big.Float in Go
+func getTickFromPrice(price *big.Float) int32 {
+	// Calculate log(price) / log(1.0001)
+	// Using natural logarithm
+	priceFloat, _ := price.Float64()
+	logBase := math.Log(1.0001)
+
+	if priceFloat <= 0 {
+		return 0 // Invalid price
+	}
+
+	tickFloat := math.Log(priceFloat) / logBase
+
+	// Round to nearest integer (int24)
+	return int32(math.Round(tickFloat))
+}
+
+// getTickFromPriceFloat64 is a simpler version using float64
+func getTickFromPriceFloat64(price float64) int32 {
+	if price <= 0 {
+		return 0
+	}
+
+	logBase := math.Log(1.0001)
+	tickFloat := math.Log(price) / logBase
+
+	return int32(math.Round(tickFloat))
 }
 
 // calculateSqrtPriceX96 calculates the square root price scaled by 2^96
@@ -451,7 +525,7 @@ func approve(tokenAddress common.Address, approveAddress common.Address, amount 
 	}
 
 	var tx *types.Transaction
-	tx, err = contract.Approve(txnOpts, approveAddress, big.NewInt(amount))
+	tx, err = contract.Approve(txnOpts, approveAddress, params.EtherToWei(big.NewInt(amount)))
 	if err != nil {
 		return nil, err
 	}
@@ -512,21 +586,22 @@ func addLiquidity(tokenAaddress common.Address, tokenBaddress common.Address, fe
 	mintParams.TickLower = big.NewInt(tickLower)
 	mintParams.TickUpper = big.NewInt(tickUpper)
 	mintParams.Recipient = fromAddress //todo: correct check?
+	mintParams.Deadline = big.NewInt(999999999999999999)
 
 	if bytes.Compare(tokenAaddress.Bytes(), tokenBaddress.Bytes()) < 0 {
 		mintParams.Token0 = tokenAaddress
 		mintParams.Token1 = tokenBaddress
-		mintParams.Amount0Desired = big.NewInt(amountA)
-		mintParams.Amount1Desired = big.NewInt(amountB)
-		mintParams.Amount0Min = big.NewInt(amountAmin)
-		mintParams.Amount1Min = big.NewInt(amountBmin)
+		mintParams.Amount0Desired = params.EtherToWei(big.NewInt(amountA))
+		mintParams.Amount1Desired = params.EtherToWei(big.NewInt(amountB))
+		mintParams.Amount0Min = params.EtherToWei(big.NewInt(amountAmin))
+		mintParams.Amount1Min = params.EtherToWei(big.NewInt(amountBmin))
 	} else {
 		mintParams.Token0 = tokenBaddress
 		mintParams.Token1 = tokenAaddress
-		mintParams.Amount0Desired = big.NewInt(amountB)
-		mintParams.Amount1Desired = big.NewInt(amountA)
-		mintParams.Amount0Min = big.NewInt(amountBmin)
-		mintParams.Amount1Min = big.NewInt(amountAmin)
+		mintParams.Amount0Desired = params.EtherToWei(big.NewInt(amountB))
+		mintParams.Amount1Desired = params.EtherToWei(big.NewInt(amountA))
+		mintParams.Amount0Min = params.EtherToWei(big.NewInt(amountBmin))
+		mintParams.Amount1Min = params.EtherToWei(big.NewInt(amountAmin))
 	}
 
 	contract, err := nonfungiblepositionmanager.NewNonfungiblepositionmanager(nonFungiblePositionManagerAddress, client)
@@ -686,4 +761,13 @@ func swapExactOutputSingle(tokenInAddress common.Address, tokenOutAddress common
 	time.Sleep(1000 * time.Millisecond)
 
 	return tx, nil
+}
+
+// ParseBigFloat parse string value to big.Float
+func ParseBigFloat(value string) (*big.Float, error) {
+	f := new(big.Float)
+	f.SetPrec(236) //  IEEE 754 octuple-precision binary floating-point format: binary256
+	f.SetMode(big.ToNearestEven)
+	_, err := fmt.Sscan(value, f)
+	return f, err
 }
