@@ -11,12 +11,12 @@ Set following environment variables:
 Additionally, the `FEE` value used when creating the liquidity pool should be identified.
 
 ### Option A) Swapping with option of constant input tokens and minimum output tokens needed
-```quantumswap-cli createpool TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE```
+```quantumswap-deploy exactinputsingle TOKEN_IN_ADDRESS TOKEN_OUT_ADDRESS FEE AMOUNT_IN AMOUNT_OUT_MIN```
 
 `FEE` : Use values 500 for 0.05%, 3000 for 0.3% or 10000 for 1% fee tier
 
 ### Option B) Swapping with option of constant output tokens and maximum input spend
-```quantumswap-cli getpool TOKEN_A_ADDRESS TOKEN_B_ADDRESS FEE```
+```quantumswap-deploy exactoutputsingle TOKEN_IN_ADDRESS TOKEN_OUT_ADDRESS FEE AMOUNT_OUT AMOUNT_IN_MAX```
 
 `FEE` : Use values 500 for 0.05%, 3000 for 0.3% or 10000 for 1% fee tier
 

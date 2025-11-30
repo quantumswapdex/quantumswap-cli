@@ -534,16 +534,16 @@ func addLiquidity(tokenAaddress common.Address, tokenBaddress common.Address, fe
 		fmt.Println("option A")
 		mintParams.Token0 = tokenAaddress
 		mintParams.Token1 = tokenBaddress
-		mintParams.Amount0Desired = big.NewInt(amountA)
-		mintParams.Amount1Desired = big.NewInt(amountB)
+		mintParams.Amount0Desired = params.EtherToWei(big.NewInt(amountA))
+		mintParams.Amount1Desired = params.EtherToWei(big.NewInt(amountB))
 		mintParams.Amount0Min = params.EtherToWei(big.NewInt(amountAmin))
 		mintParams.Amount1Min = params.EtherToWei(big.NewInt(amountBmin))
 	} else {
 		fmt.Println("option B")
 		mintParams.Token0 = tokenBaddress
 		mintParams.Token1 = tokenAaddress
-		mintParams.Amount0Desired = big.NewInt(amountB)
-		mintParams.Amount1Desired = big.NewInt(amountA)
+		mintParams.Amount0Desired = params.EtherToWei(big.NewInt(amountB))
+		mintParams.Amount1Desired = params.EtherToWei(big.NewInt(amountA))
 		mintParams.Amount0Min = params.EtherToWei(big.NewInt(amountBmin))
 		mintParams.Amount1Min = params.EtherToWei(big.NewInt(amountAmin))
 	}
