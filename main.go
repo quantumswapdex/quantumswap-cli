@@ -440,6 +440,8 @@ func ExactInputSingle() {
 	}
 	fromAddress = common.HexToAddress(fromAddr)
 
+	fmt.Println("SwapExactSingle", "v3SwapRouterContractAddr", v3SwapRouterContractAddr, "tokenInaddr", tokenInaddr, "tokenOutAddress", tokenOutAddress, "fee", fee,
+		"amountInVal", amountInVal, "amountOutMinVal", amountOutMinVal)
 	ethConfirm, err := prompt.Stdin.PromptConfirm(fmt.Sprintf("Do you want to SwapExactSingle from %s?", fromAddress))
 	if err != nil {
 		fmt.Println("error", err)

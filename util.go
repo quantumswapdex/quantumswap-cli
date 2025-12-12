@@ -614,8 +614,8 @@ func swapExactSingle(tokenInAddress common.Address, tokenOutAddress common.Addre
 	swapParams.TokenOut = tokenOutAddress
 	swapParams.Fee = big.NewInt(fee)
 	swapParams.Recipient = fromAddress //todo: check if correct
-	swapParams.AmountIn = big.NewInt(amountIn)
-	swapParams.AmountOutMinimum = big.NewInt(amountOutMinimum)
+	swapParams.AmountIn = params.EtherToWei(big.NewInt(amountIn))
+	swapParams.AmountOutMinimum = params.EtherToWei(big.NewInt(amountOutMinimum))
 	swapParams.SqrtPriceLimitX96 = big.NewInt(0)
 
 	contract, err := swaprouter.NewSwaprouter(v3SwapRouterContractAddress, client)
