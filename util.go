@@ -568,7 +568,7 @@ func addLiquidity(tokenAaddress common.Address, tokenBaddress common.Address, fe
 	return tx, nil
 }
 
-func swapExactSingle(tokenInAddress common.Address, tokenOutAddress common.Address, fee int64, amountIn int64, amountOutMinimum int64) (*types.Transaction, error) {
+func swapExactInputSingle(tokenInAddress common.Address, tokenOutAddress common.Address, fee int64, amountIn int64, amountOutMinimum int64) (*types.Transaction, error) {
 	key, err := GetKey(fromAddress.Hex())
 	if err != nil {
 		return nil, err
@@ -684,8 +684,9 @@ func swapExactOutputSingle(tokenInAddress common.Address, tokenOutAddress common
 	swapParams.TokenOut = tokenOutAddress
 	swapParams.Fee = big.NewInt(fee)
 	swapParams.Recipient = fromAddress //todo: check if correct
-	swapParams.AmountOut = big.NewInt(amountOut)
-	swapParams.AmountInMaximum = big.NewInt(amountInMaximum)
+	swapParams.AmountOut = params.EtherToWei(big.NewInt(amountOut))
+	swapParams.AmountInMaximum = params.EtherToWei(big.NewInt(amountInMaximum))
+	swapParams.SqrtPriceLimitX96 = big.NewInt(0)
 
 	contract, err := swaprouter.NewSwaprouter(v3SwapRouterContractAddress, client)
 	if err != nil {

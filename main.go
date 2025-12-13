@@ -452,7 +452,7 @@ func ExactInputSingle() {
 		return
 	}
 
-	_, err = swapExactSingle(tokenInAddress, tokenOutAddress, int64(fee), int64(amountIn), int64(amountOutMin))
+	_, err = swapExactInputSingle(tokenInAddress, tokenOutAddress, int64(fee), int64(amountIn), int64(amountOutMin))
 	if err != nil {
 		fmt.Println("swapExactSingle error", err)
 		return
@@ -518,6 +518,8 @@ func ExactOutputSingle() {
 	}
 	fromAddress = common.HexToAddress(fromAddr)
 
+	fmt.Println("ExactOutputSingle", "v3SwapRouterContractAddr", v3SwapRouterContractAddr, "tokenInaddr", tokenInaddr, "tokenOutAddress", tokenOutAddress, "fee", fee,
+		"amountOutVal", amountOutVal, "amountInMaxVal", amountInMaxVal)
 	ethConfirm, err := prompt.Stdin.PromptConfirm(fmt.Sprintf("Do you want to SwapExactSingle from %s?", fromAddress))
 	if err != nil {
 		fmt.Println("error", err)
