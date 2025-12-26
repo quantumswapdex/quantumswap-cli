@@ -92,9 +92,11 @@ Add the liquidity.
 Check whether liquidity has been added, by checking balance in `PAIR_ADDRESS` and whether the token balance has decreased from `token creator`
 
 `dputil tokenbalance %TOKEN_A_ADDRESS% %PAIR_ADDRESS%`
+
 `dputil tokenbalance %TOKEN_B_ADDRESS% %PAIR_ADDRESS%`
 
 `dputil tokenbalance %TOKEN_A_ADDRESS% %FROM_ADDRESS%`
+
 `dputil tokenbalance %TOKEN_B_ADDRESS% %FROM_ADDRESS%`
 
 ### Demonstration of Swapping
@@ -124,7 +126,9 @@ After giving approval, validate the approval has been given. The output values s
 
 Adjust the following values as desired.
 `set AMOUNT_IN=100`
+
 `set AMOUNT_OUT_MIN=1`
+
 `set FROM_ADDRESS=%TOKEN_SWAPPER_ADDRESS%`
 
 `quantumswap-cli swapexacttokensFortokens %TOKEN_A_ADDRESS% %TOKEN_B_ADDRESS% %AMOUNT_IN% %AMOUNT_OUT_MIN%`
@@ -132,8 +136,10 @@ Adjust the following values as desired.
 Now check balance of both tokens for `TOKEN_SWAPPER_ADDRESS` and `PAIR_ADDRESS`. TokenA should have decreased for the swapper, TokenB should have increased, while its vice versa for the `PAIR_ADDRESS`
 
 `dputil tokenbalance %TOKEN_A_ADDRESS% %TOKEN_SWAPPER_ADDRESS%`
+
 `dputil tokenbalance %TOKEN_B_ADDRESS% %TOKEN_SWAPPER_ADDRESS%`
 
 `dputil tokenbalance %TOKEN_A_ADDRESS% %PAIR_ADDRESS%`
+
 `dputil tokenbalance %TOKEN_B_ADDRESS% %PAIR_ADDRESS%`
 
