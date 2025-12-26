@@ -126,6 +126,7 @@ After giving approval, validate the approval has been given. The output values s
 #### Swap the tokens
 
 Adjust the following values as desired.
+
 `set AMOUNT_IN=100`
 
 `set AMOUNT_OUT_MIN=1`
