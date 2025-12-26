@@ -48,6 +48,7 @@ Ensure balance matches the values above when the token was created.
 `quantumswap-cli createpair %TOKEN_A_ADDRESS% %TOKEN_B_ADDRESS%`
 
 Note down the pair address by running the following command. 
+
 `quantumswap-cli getpair %TOKEN_A_ADDRESS% %TOKEN_B_ADDRESS%`
 
 Set the PAIR_ADDRESS environment variable to the output value from above command.
