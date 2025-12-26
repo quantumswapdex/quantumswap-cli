@@ -106,6 +106,7 @@ First, send token to `TOKEN_SWAPPER_ADDRESS` from the `TOKEN_CREATOR_ADDRESS` (o
 `dputil transfertokens %TOKEN_A_ADDRESS% %TOKEN_CREATOR_ADDRESS% %TOKEN_SWAPPER_ADDRESS% 10000`
 
 Check balance of the swapper.
+
 `dputil tokenbalance %TOKEN_A_ADDRESS% %TOKEN_SWAPPER_ADDRESS%`
 
 #### Approve the tokens for swapping
